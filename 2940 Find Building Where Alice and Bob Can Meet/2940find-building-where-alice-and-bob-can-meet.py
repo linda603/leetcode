@@ -1,19 +1,17 @@
 class Solution:
     def leftmostBuildingQueries(self, heights: List[int], queries: List[List[int]]) -> List[int]:
-        res, idx = [0] * len(queries), []
-        for i, q in enumerate(queries):
-            a, b = sorted(q)
+        res = [-1] * len(queries)
+
+        for i in range(len(queries)):
+            a, b = sorted(queries[i])
             if a == b or heights[a] < heights[b]:
                 res[i] = b
-            else:
-                idx.append((a, b, i))
-        j, mono = len(heights) - 1, deque()
-        for a, b, i in sorted(idx, key=itemgetter(1), reverse=True):
-            while j > b:
-                while mono and heights[mono[0]] < heights[j]:
-                    mono.popleft()
-                mono.appendleft(j)
-                j -= 1
-            k = bisect_right(mono, heights[a], key=lambda x: heights[x])
-            res[i] = -1 if k == len(mono) else mono[k]
+                continue
+            for j in range(b + 1, len(heights)):
+                if heights[j] > heights[a] and heights[j] > heights[b]:
+                    res[i] = j
+                    break
         return res
+
+# Time: O(q*n)
+# Space: O(n)
