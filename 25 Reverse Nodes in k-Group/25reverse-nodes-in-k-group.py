@@ -7,40 +7,34 @@ class Solution:
     def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
         dummy = ListNode(0, head)
         prev_group = dummy
+        curr = head
 
         while True:
             k_node = self.get_k_node(prev_group, k)
             if not k_node:
                 break
             next_group = k_node.next
-
-            curr = prev_group.next
-            prev = k_node.next
-            self.reverse(curr, prev, k)
-
+            prev = next_group
+            while curr != next_group:
+                tmp = curr.next
+                curr.next = prev
+                prev = curr
+                curr = tmp
+            
+            # correct pointers
             tmp = prev_group.next
             prev_group.next = k_node
             prev_group = tmp
-            curr.next = next_group
+
+            curr = next_group
         return dummy.next
-
-    def get_k_node(self, node, k):
-        curr = node
-
-        while k and curr:
-            curr = curr.next
-            k -= 1
-        return curr
     
-    def reverse(self, curr, prev, k):
-
-        while k and curr:
-            tmp = curr.next
-            curr.next = prev
-            prev = curr
-            curr = tmp
+    def get_k_node(self, head, k):
+        
+        while head and k:
+            head = head.next
             k -= 1
-        return prev
+        return head
 
 # Time: O(2n)
 # Space: O(1)
