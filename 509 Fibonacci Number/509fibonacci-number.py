@@ -1,14 +1,15 @@
 class Solution:
+    def __init__(self):
+        self.cache = {0: 0, 1: 1}
+
     def fib(self, n: int) -> int:
-        cache = {0: 0, 1: 1}
-        
-        def dfs(n):
-            if n in cache:
-                return cache[n]
-            cache[n] = dfs(n - 1) + dfs(n - 2)
-            return cache[n]
+        return self.dfs(n)
+    
+    def dfs(self, i):
+        if i in self.cache:
+            return self.cache[i]
+        self.cache[i] = self.dfs(i - 1) + self.dfs(i - 2)
+        return self.cache[i]
 
-        return dfs(n)
-
-# Time: O(2^n) -> O(n)
+# Time: O(n)
 # Space: O(n)
