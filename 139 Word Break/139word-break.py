@@ -1,15 +1,21 @@
 class Solution:
+    def __init__(self):
+        self.cache = {}
+
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-        dp = [False for i in range(len(s) + 1)]
-        dp[len(s)] = True
+        return self.dfs(s, wordDict, 0)
+    
+    def dfs(self, s, wordDict, i):
+        if i >= len(s):
+            return True
+        if i in self.cache:
+            return self.cache[i]
+        self.cache[i] = False
+        for word in wordDict:
+            if i + len(word) <= len(s) and s[i: i + len(word)] == word and self.dfs(s, wordDict, i + len(word)):
+                self.cache[i] = True
+                break
+        return self.cache[i]
 
-        for i in range(len(s) - 1, -1, -1):
-            for word in wordDict:
-                if s[i: i + len(word)] == word and dp[i + len(word)]:
-                    dp[i] = True
-                    break
-        return dp[0]
-
-# Time: O(n*m*w). n: len(s), m: len(wordDict), w: len(word)
+# Time: O(n*m*w) = O(nm)
 # Space: O(n + w)
-                    
