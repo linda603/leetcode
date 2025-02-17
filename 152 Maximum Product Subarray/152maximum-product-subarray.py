@@ -1,21 +1,15 @@
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
-        res = float("-inf")
-        curr = 1 # curr_product
-
-        for i in range(len(nums)):
-            curr *= nums[i]
-            res = max(res, curr)
-            if curr == 0:
-                curr = 1
+        curr_max = 1
+        curr_min = 1
+        max_product = float("-inf")
         
-        curr = 1
-        for i in range(len(nums) - 1, -1, -1):
-            curr *= nums[i]
-            res = max(res, curr)
-            if curr == 0:
-                curr = 1
-        return res
+        for num in nums:
+            tmp = curr_max
+            curr_max = max(curr_max * num, curr_min * num, num)
+            curr_min = min(tmp * num, curr_min * num, num) # curr_max is overwritten already
+            max_product = max(max_product, curr_max)
+        return max_product
 
-# Time: O(2n)
+# Time: O(n)
 # Space: O(1)
