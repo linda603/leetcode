@@ -1,20 +1,26 @@
 class Solution:
     def canPartition(self, nums: List[int]) -> bool:
         total = sum(nums)
-        if total % 2: return False
-        half = total // 2 # half
-        dp = set()
-        dp.add(0)
+        if total % 2:
+            return False
+        target = total // 2
+        dp = [[False for c in range(target + 1)] for r in range(len(nums) + 1)]
+
+        for i in range(len(nums) + 1):
+            dp[i][target] = True
 
         for i in range(len(nums) - 1, -1, -1):
-            tmp = dp.copy()
-            for curr_sum in dp:
-                if curr_sum + nums[i] == half:
+            for val in range(target - 1, -1, -1):
+                if nums[i] == target:
                     return True
-                if curr_sum + nums[i] < half:
-                    tmp.add(curr_sum + nums[i])
-            dp = tmp
-        return False
+                # skip i
+                dp[i][val] = dp[i + 1][val]
+                if dp[i][val]:
+                    continue
+                # include i
+                if val + nums[i] <= target:
+                    dp[i][val] = dp[i + 1][val + nums[i]]
+        return dp[0][0]
 
 # Time: O(n*half)
-# Space: O(half)
+# Space: O(n*half)
