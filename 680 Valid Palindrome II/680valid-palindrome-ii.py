@@ -4,24 +4,23 @@ class Solution:
         r = len(s) - 1
 
         while l < r:
-            while l < r and not s[l].isdigit() and not s[l].isalpha():
+            while l < r and not s[l].isalpha() and not s[l].isdigit():
                 l += 1
-            while l < r and not s[r].isdigit() and not s[r].isalpha():
+            while l < r and not s[r].isalpha() and not s[r].isdigit():
                 r -= 1
-            if s[l] != s[r]:
-                return self.is_palindrome(s, l + 1, r) or self.is_palindrome(s, l, r - 1)
+            if s[l].lower() != s[r].lower():
+                return self.valid(s, l + 1, r) or self.valid(s, l, r - 1)
             l += 1
             r -= 1
         return True
     
-    def is_palindrome(self, s, l, r):
-
+    def valid(self, s, l, r):
         while l < r:
-            while l < r and not s[l].isalnum():
+            while not s[l].isalpha() and not s[l].isdigit():
                 l += 1
-            while l < r and not s[r].isalnum():
+            while not s[r].isalpha() and not s[r].isdigit():
                 r -= 1
-            if s[l] != s[r]:
+            if s[l].lower() != s[r].lower():
                 return False
             l += 1
             r -= 1
