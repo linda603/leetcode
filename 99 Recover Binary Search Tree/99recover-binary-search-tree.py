@@ -5,34 +5,32 @@
 #         self.left = left
 #         self.right = right
 class Solution:
+    def __init__(self):
+        self.first_violation = None
+        self.second_violation = None
+        self.prev = None
+
     def recoverTree(self, root: Optional[TreeNode]) -> None:
         """
         Do not return anything, modify root in-place instead.
         """
-        # Identify 1st violation. first = prev, second = curr (in case don't have 2nd violation, still can swap first & second)
-        #.            2nd violation. second = curr
-        # swap first and second
-        first = None
-        second = None
-        prev = None
-
-        # inorder traversal
-        def dfs(node):
-            nonlocal first, second, prev
-            if not node:
-                return
-            dfs(node.left)
-            if prev and prev.val > node.val:
-                if not first:
-                    first = prev
-                second = node
-            prev = node
-            dfs(node.right)
+        self.dfs(root)
+        tmp = self.first_violation.val
+        self.first_violation.val = self.second_violation.val
+        self.second_violation.val = tmp
     
-        dfs(root)
-        if first and second:
-            first.val, second.val = second.val, first.val
-        return root
+    # inorder traversal
+    def dfs(self, node):
+        if not node:
+            return
+        self.dfs(node.left)
+        # processing at curr node, check is violation happens
+        if self.prev and node.val < self.prev.val:
+            if not self.first_violation:
+                self.first_violation = self.prev
+            self.second_violation = node
+        self.prev = node
+        self.dfs(node.right)
 
 # Time: O(n)
 # Space: O(h)
