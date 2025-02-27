@@ -8,30 +8,30 @@ class Solution:
             4: [1, 3, 5],
             5: [2, 4]
         }
+
         target = "123450"
         source = "".join([str(board[r][c]) for r in range(2) for c in range(3)])
-        queue = collections.deque([source])
+        queue = deque([source])
         visited = set([source])
 
-        move = 0
+        swaps = 0
         while queue:
             size = len(queue)
             for i in range(size):
                 curr_str = queue.popleft()
                 if curr_str == target:
-                    return move
+                    return swaps
                 curr_arr = list(curr_str)
-                zero_idx = curr_arr.index("0") 
+                zero_idx = curr_arr.index("0")
                 for nei in adj[zero_idx]:
-                    tmp = curr_arr.copy()
+                    tmp = list(curr_str)
                     tmp[nei], tmp[zero_idx] = tmp[zero_idx], tmp[nei]
-                    nxt = "".join(tmp)
-                    if nxt not in visited:
-                        visited.add(nxt)
-                        queue.append(nxt)
-            move += 1
-        
+                    nei_str = "".join(tmp)
+                    if nei_str not in visited:
+                        queue.append(nei_str)
+                        visited.add(nei_str)
+            swaps += 1
         return -1
 
-# Time: O(mn!*mn). queue takes O(mn!) for all permutation. O(mn) to look through the string to find zero index
-# Space: O(mn!). visited set() takes O(mn!), queue takes O(mn!)
+# Time: O(mn!*mn). O(mn!) permutation for queue. O(mn) to look for index "0"
+# Space: O(mn!) for queue + set. O(mn) for curr_arr, tmp arr
