@@ -1,53 +1,57 @@
-class union_find:
+class UnionFind:
     def __init__(self, n):
-        self.parent = [i for i in range(n)]
+        self.par = [i for i in range(n)]
         self.rank = [1] * n
 
-    def find_par(self, i):
-        p = self.parent[i]
+    def find(self, i):
+        p = self.par[i]
 
-        while p != self.parent[p]:
-            p = self.parent[self.parent[p]]
-            p = self.parent[p]
+        while p != self.par[p]:
+            p = self.par[self.par[p]]
+            p = self.par[p]
         return p
-    
-    def union(self, i1, i2):
-        p1 = self.find_par(i1)
-        p2 = self.find_par(i2)
+        
+    def union(self, a, b):
+        par_a = self.find(a)
+        par_b = self.find(b)
 
-        if p1 == p2:
+        if par_a == par_b:
             return False
-        if self.rank[p1] >= self.rank[p2]:
-            self.parent[p2] = p1
-            self.rank[p1] += self.rank[p2]
+        if self.rank[par_a] >= self.rank[par_b]:
+            self.rank[par_a] += self.rank[par_b]
+            self.par[par_b] = par_a
         else:
-            self.parent[p1] = p2
-            self.rank[p2] += self.rank[p1]
+            self.rank[par_b] += self.rank[par_a]
+            self.par[par_a] = par_b
         return True
 
 class Solution:
     def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:
-        n = len(accounts)
-        union_f = union_find(n)
+        union_find = UnionFind(len(accounts))
+        email_to_idx = {}
 
-        email_to_i = {} # map email to account idx
-        for i, acc in enumerate(accounts):
-            for email in acc[1:]:
-                if email not in email_to_i:
-                    email_to_i[email] = i
+        for i in range(len(accounts)):
+            for j in range(1, len(accounts[i])):
+                email = accounts[i][j]
+                if email not in email_to_idx:
+                    email_to_idx[email] = i
                 else:
-                    union_f.union(email_to_i[email], i)
+                    union_find.union(email_to_idx[email], i) # merge 2 nodes indexes together if they share the same email
         
-        i_to_email = defaultdict(list)
-        for email, i in email_to_i.items():
-            parent_i = union_f.find_par(i)
-            i_to_email[parent_i].append(email)
+        idx_to_emails = {}
+        for email, idx in email_to_idx.items():
+            parent_idx = union_find.find(idx)
+            if parent_idx not in idx_to_emails:
+                idx_to_emails[parent_idx] = []
+            idx_to_emails[parent_idx].append(email)
         
         res = []
-        for i, emails in i_to_email.items():
-            name = accounts[i][0]
+        for idx, emails in idx_to_emails.items():
+            name = accounts[idx][0]
             res.append([name] + sorted(emails))
         return res
 
-# Time: O(nl*n + nl + nllognl). n: len(accounts), l: longest length of an account
+# Time: O(nl*n + nl + nllogl). n: len(accounts), l: longest list of an account
 # Space: O(nl)
+
+
