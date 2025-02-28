@@ -1,22 +1,25 @@
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
-        adj = {i: [] for i in range(n + 1)}
-
+        adj = {i: [] for i in range(1, n + 1)}
         for u, v, w in times:
-            adj[u].append([w, v])
+            adj[u].append((w, v))
         
-        heap = [[0, k]] # time, node
-        visited = set([k])
+        heap = [(0, k)] # (time, node)
+        visited = set()
 
         while heap:
             time, node = heapq.heappop(heap)
+            if node in visited:
+                continue
+            visited.add(node)
             if len(visited) == n:
                 return time
-            visited.add(node)
-            for w, nei in adj[node]:
-                if nei not in visited:
-                    heapq.heappush(heap, [time + w, nei])
-        return time if len(visited) == n else -1
+            for nei_w, nei in adj[node]:
+                if nei in visited:
+                    continue
+                heapq.heappush(heap, (time + nei_w, nei))
 
-# Time: O(E + V + E). E to build adj list. V + E for traversal
-# Space: O(V + E) for adj + heap space.
+        return -1
+
+# Time: O(E + V + ElogV)
+# Space: O(E + V + V + V)
