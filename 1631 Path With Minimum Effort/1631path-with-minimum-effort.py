@@ -1,7 +1,7 @@
 class Solution:
     def minimumEffortPath(self, heights: List[List[int]]) -> int:
         m, n = len(heights), len(heights[0])
-        heap = [[0, 0, 0]] # diff, r, c
+        heap = [(0, 0, 0)] # (diff, r, c)
         visited = set()
         directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
 
@@ -15,9 +15,9 @@ class Solution:
             for dr, dc in directions:
                 nei_r = r + dr
                 nei_c = c + dc
-                if nei_r in range(m) and nei_c in range(n) and (nei_r, nei_c) not in visited:
+                if 0 <= nei_r < m and 0 <= nei_c < n and (nei_r, nei_c) not in visited:
                     new_diff = max(diff, abs(heights[nei_r][nei_c] - heights[r][c]))
-                    heapq.heappush(heap, [new_diff, nei_r, nei_c])
+                    heapq.heappush(heap, (new_diff, nei_r, nei_c))
 
 # Time: O(mnlogmn)
 # Space: O(mn)
