@@ -6,24 +6,16 @@
 #         self.right = right
 class Solution:
     def maxSumBST(self, root: Optional[TreeNode]) -> int:
-        res = 0
-
-        def dfs(node):
-            nonlocal res
-            if not node:
-                return [0, float("inf"), float("-inf")] # [size, min, max]
-            left = dfs(node.left)
-            right = dfs(node.right)
-
-            # not valid BST
-            if not (left[2] < node.val < right[1]):
-                return [0, float("-inf"), float("inf")] # so that parent cannot be a BST
-            curr_sum = left[0] + node.val + right[0]
-            res = max(res, curr_sum)
-            return [curr_sum, min(node.val, left[1]), max(node.val, right[2])]
-        
-        dfs(root)
-        return res
-
-# Time: O(n) for post order traversal
-# Space: O(h). h: height of the binary tree
+        if not root:
+            return 0
+        res = self.dfs(root)[0]
+        return res if res > 0 else 0
+    
+    def dfs(self, node):
+        if not node:
+            return [0, float("inf"), float("-inf")]
+        left = self.dfs(node.left)
+        right = self.dfs(node.right)
+        if left[2] < node.val and node.val < right[1]:
+            return [left[0] + right[0] + node.val, min(left[1], node.val), max(right[2], node.val)]
+        return [max(left[0], right[0]), float("-inf"), float("inf")]
