@@ -1,20 +1,27 @@
 class Solution:
     def reorganizeString(self, s: str) -> str:
-        count = Counter(s)
+        count = {}
+
+        for c in s:
+            if c not in count:
+                count[c] = 0
+            count[c] += 1
+        
         heap = [(-cnt, c) for c, cnt in count.items()]
         heapq.heapify(heap)
-        prev_hold = None
-        res = ""
 
+        res = ""
+        prev = None
         while heap:
             cnt, c = heapq.heappop(heap)
             res += c
-            if prev_hold:
-                heapq.heappush(heap, prev_hold)
-                prev_hold = None
+            if prev:
+                heapq.heappush(heap, prev)
+                prev = None
             if cnt + 1 != 0:
-                prev_hold = (cnt + 1, c)
-        return "" if prev_hold else res
+                prev = (cnt + 1, c)
+        return res if not prev else ""
 
-# Time: O(n + 26 + 26log26 + nlog26) = O(n)
-# Space: O(26) = O(1)
+# Time: O(n + 26 + 26log26 + nlog26) = O(1)
+# Space: O(26 + 26) = O(1)
+            
