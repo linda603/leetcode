@@ -7,25 +7,22 @@
 class Solution:
     def deleteNode(self, root: Optional[TreeNode], key: int) -> Optional[TreeNode]:
         if not root:
-            return None
+            return root
         if root.val == key:
             return self.remove_node(root)
-    
         curr = root
+
         while curr:
-            # if the node is found, correct the pointers
-            if key < curr.val:
+            if curr.val > key:
                 if curr.left and curr.left.val == key:
                     curr.left = self.remove_node(curr.left)
                     break
-                else:
-                    curr = curr.left
+                curr = curr.left
             else:
                 if curr.right and curr.right.val == key:
                     curr.right = self.remove_node(curr.right)
                     break
-                else:
-                    curr = curr.right
+                curr = curr.right
         return root
 
     def remove_node(self, node):
@@ -33,17 +30,16 @@ class Solution:
             return node.right
         if not node.right:
             return node.left
-        # find the most right of left child tree
         most_right = self.find_most_right(node.left)
-        # every node in the right child is greater than left child
         most_right.right = node.right
         return node.left
-    
+
     def find_most_right(self, node):
         curr = node
+
         while curr.right:
             curr = curr.right
         return curr
 
-# Time: O(h) = O(logn)
+# Time: O(logn)
 # Space: O(1)
