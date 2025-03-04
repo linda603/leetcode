@@ -1,7 +1,7 @@
 class Solution:
     def furthestBuilding(self, heights: List[int], bricks: int, ladders: int) -> int:
-        heap = [] # max heap to store the diff that already used bricks to move
-
+        heap = [] # max heap to store the diff that already used bricks to move to next index
+        
         for i in range(len(heights) - 1):
             if heights[i + 1] <= heights[i]:
                 continue
@@ -10,11 +10,11 @@ class Solution:
             bricks -= diff
 
             if bricks < 0: # not able to move to i + 1 by using bricks
-                if ladders == 0:
+                if not ladders:
                     return i
                 ladders -= 1
-                # max diff in heap will use ladder instead of bricks
-                prev_diff = -(heapq.heappop(heap))
+                # max diff in heap will user ladder instead of bricks
+                prev_diff = -heapq.heappop(heap)
                 bricks += prev_diff
         return len(heights) - 1
 
