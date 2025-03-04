@@ -5,27 +5,24 @@
 #         self.next = next
 class Solution:
     def reverseBetween(self, head: Optional[ListNode], left: int, right: int) -> Optional[ListNode]:
-        dummy = ListNode(0, head) # handle the head of the new list easily
-        
-        left_prev = dummy
-        # shift left_prev l - 1 time to make left_prev at the node just before left node
-        for i in range(left - 1):
-            left_prev = left_prev.next
+        dummy = ListNode(0, head)
+        prev_left = dummy
 
+        for i in range(left - 1):
+            prev_left = prev_left.next
+
+        # Reverse from left to right
+        curr = prev_left.next
         prev = None
-        curr = left_prev.next
-        # reverse r - l + 1 time
         for i in range(right - left + 1):
-            next_node = curr.next
+            tmp = curr.next
             curr.next = prev
             prev = curr
-            curr = next_node
+            curr = tmp
         
-        # correct the last 2 links from left_prev.next.next (Example 1: 2.next = NULL)
-        #                               left_prev.next (Example 1: 1.next = 2)
-        left_prev.next.next = curr
-        left_prev.next = prev
-        
+        # Correct prev_left pointer and tail pointer
+        prev_left.next.next = curr
+        prev_left.next = prev
         return dummy.next
 
 # Time: O(n)
