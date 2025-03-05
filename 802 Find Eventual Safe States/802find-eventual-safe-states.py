@@ -1,30 +1,35 @@
 class Solution:
     def eventualSafeNodes(self, graph: List[List[int]]) -> List[int]:
-        # Topological sort
-        visited = set()
-        cycle = set()
+        n = len(graph)
+        outdegree = [0] * n
+        adj = {i: [] for i in range(n)}
 
-        def dfs(node):
-            if graph[node] == []:
-                if node not in visited:
-                    visited.add(node)
-                return True
-            if node in cycle:
-                return False
-            cycle.add(node)
+        for node in range(n):
             for nei in graph[node]:
-                if not dfs(nei):
-                    return False
-            cycle.remove(node)
-            graph[node] = []
-            visited.add(node)
-            return True
+                adj[nei].append(node)
+            outdegree[node] = len(graph[node])
         
         res = []
-        for node in range(len(graph)):
-            if dfs(node):
+        queue = deque()
+        # Push all zero indegree nodes in the queue
+        for node in range(n):
+            if outdegree[node] == 0:
+                queue.append(node)
+        
+        safe_nodes = [0] * n
+        while queue:
+            node = queue.popleft()
+            safe_nodes[node] = 1
+            for nei in adj[node]:
+                outdegree[nei] -= 1
+                if not outdegree[nei]:
+                    queue.append(nei)
+        
+        res = []
+        for node in range(n):
+            if safe_nodes[node]:
                 res.append(node)
         return res
 
 # Time: O(E + V)
-# Space: O(V + V)
+# Space: O(E + V)
