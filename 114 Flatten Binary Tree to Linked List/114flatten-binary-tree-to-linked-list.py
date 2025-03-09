@@ -11,20 +11,16 @@ class Solution:
         """
         curr = root
 
-        # root = [1, 2, 3, 4, null, 6]
         while curr:
             if curr.left:
-                # curr = 1, go until tail = 4
                 tail = curr.left
                 while tail.right:
                     tail = tail.right
-                
-                # correct the pointers, 4 -> 5, 1 - > 2
                 tail.right = curr.right
                 curr.right = curr.left
-                # remove curr left children
                 curr.left = None
-            curr = curr.right
         
-# Time: O(2n)
+            curr = curr.right
+
+# Time: O(n)
 # Space: O(1)
