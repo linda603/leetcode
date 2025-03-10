@@ -5,30 +5,32 @@
 #         self.left = left
 #         self.right = right
 class Solution:
+    def __init__(self):
+        self.res = []
+
     def delNodes(self, root: Optional[TreeNode], to_delete: List[int]) -> List[TreeNode]:
-        toDelete = set(to_delete)
-        remaining = []
+        delete_set = set(to_delete)
+        self.dfs(root, delete_set)
+        if root.val not in delete_set:
+            self.res.append(root)
+        return self.res
 
-        def removeNodes(root, remaining):
-            if not root:
-                return None
-            root.left = removeNodes(root.left, remaining)
-            root.right = removeNodes(root.right, remaining)
+    def dfs(self, node, to_delete):
+        if not node:
+            return False
+        left = self.dfs(node.left, to_delete)
+        right = self.dfs(node.right, to_delete)
+        if node.val in to_delete:
+            if not left and node.left:
+                self.res.append(node.left)
+            if not right and node.right:
+                self.res.append(node.right)
+            return True
+        if left:
+            node.left = None
+        if right:
+            node.right = None
+        return False
 
-            if root.val in toDelete:
-                if root.left:
-                    remaining.append(root.left)
-                if root.right:
-                    remaining.append(root.right)
-                return None
-            return root
-
-        removeNodes(root, remaining)
-
-        if root.val not in toDelete:
-            remaining.append(root)
-
-        return remaining
-
-#Time: O(n) n: number of nodes in the tree
-#Space: O(h + m) = O(h) due to dfs() calls, worst case O(n), m: hash set size
+# Time: O(n)
+# Space: O(h)
