@@ -1,21 +1,21 @@
 class Solution:
     def minZeroArray(self, nums: List[int], queries: List[List[int]]) -> int:
-        events = [0] * (len(nums) + 1)
+        line_sweep = [0] * (len(nums) + 1)
         count = 0
-        j = 0
+        k = 0
 
         for i, num in enumerate(nums):
-            while j < len(queries) and count + events[i] < num:
-                print("i, events[i], count:", i, events[i], count)
-                l, r, val = queries[j]
-                events[max(l, i)] += val
-                events[r + 1] -= val
-                j += 1
-            if count + events[i] < num:
+            while k < len(queries) and count + line_sweep[i] < num:
+                start, end, val = queries[k]
+                k += 1
+                if end < i:
+                    continue
+                line_sweep[max(i, start)] += val
+                line_sweep[end + 1] -= val
+            if count + line_sweep[i] < num:
                 return -1
-            count += events[i]
+            count += line_sweep[i]
+        return k
 
-        return j
-
-# Time: O(n + j)
+# Time: O(n + k)
 # Space: O(n)
