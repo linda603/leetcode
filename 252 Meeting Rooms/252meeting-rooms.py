@@ -1,13 +1,13 @@
 class Solution:
     def canAttendMeetings(self, intervals: List[List[int]]) -> bool:
         intervals.sort()
+        prev_end = None
 
-        prev_end = float("-inf")
         for start, end in intervals:
-            if start < prev_end:
+            if prev_end and start < prev_end:
                 return False
             prev_end = end
         return True
 
-# Time: O(nlogn + n)
+# Time: O(nlogn)
 # Space: O(n)
