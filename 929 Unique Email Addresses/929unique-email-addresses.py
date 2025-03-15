@@ -1,18 +1,18 @@
 class Solution:
     def numUniqueEmails(self, emails: List[str]) -> int:
-        addresses = set()
+        emails_set = set()
 
         for email in emails:
             local, domain = email.split("@")
-            updated_local = ""
+            new_local = ""
             for c in local:
+                if c == "+":
+                    break
                 if c == ".":
                     continue
-                elif c == "+":
-                    break
-                updated_local += c
-            addresses.add(updated_local + "@" + domain)
-        return len(addresses)
+                new_local += c
+            emails_set.add(new_local + "@" + domain)
+        return len(emails_set)
 
-# Time: O(n*(l + l)) = O(nl). n: len(emails), l: len(string email)
-# Space: O(nl)
+# Time: O(n)
+# Space: O(n
