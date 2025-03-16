@@ -1,17 +1,15 @@
 class Solution:
     def deckRevealedIncreasing(self, deck: List[int]) -> List[int]:
         deck.sort()
-        queue = deque(range(0, len(deck)))
+        queue = deque(range(len(deck)))
         res = [0] * len(deck)
 
         for num in deck:
-            i = queue.popleft()
-            res[i] = num
+            idx = queue.popleft()
+            res[idx] = num
             if queue:
-                j = queue.popleft()
-                queue.append(j)
-
+                queue.append(queue.popleft())
         return res
 
-#Time: O(nlogn + n) sorting + iterate all deck
-#Space: O(n) due to queue size.
+# Time: O(nlogn)
+# Space: O(n)
