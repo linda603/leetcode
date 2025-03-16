@@ -1,36 +1,30 @@
 class Solution:
     def mostBooked(self, n: int, meetings: List[List[int]]) -> int:
-        meetings.sort()
-        count = [[0, 0]] * n # available time, count
-        #heap = []
+        meetings.sort(key=lambda x:x[0])
+        avail_rooms = [i for i in range(n)] # min heap of available time
+        used_rooms = [] # min heap of ending time
+        count = [0] * n
+        res = n
+        max_count = 0
 
         for start, end in meetings:
-            min_available_time = float("inf")
-            delay = True
-            for i in range(n):
-                avail_time, cnt = count[i]
-                if avail_time < min_available_time:
-                    min_available_time = avail_time
-                    assigned_idx = i
-                if start >= avail_time:
-                    count[i] = [end, cnt + 1]
-                    delay = False
-                    break
-            if delay:
-                diff = min_available_time - start
-                count[assigned_idx] = [end + diff, count[assigned_idx][1] + 1]
-        #print(count)
-        res = 0
-        max_cnt = 0
-        for i in range(n):
-            if count[i][1] > max_cnt:
-                max_cnt = count[i][1] 
-                res = i
+            while used_rooms and used_rooms[0][0] <= start:
+                heapq.heappush(avail_rooms, heapq.heappop(used_rooms)[1])
+
+            if avail_rooms:
+                room = heapq.heappop(avail_rooms)
+                count[room] += 1
+                heapq.heappush(used_rooms, (end, room))
+            else:
+                prev_end, room = heapq.heappop(used_rooms)
+                count[room] += 1
+                heapq.heappush(used_rooms, (end + prev_end - start, room))
+            if count[room] > max_count:
+                max_count = count[room]
+                res = room
+            elif count[room] == max_count:
+                res = min(res, room)
         return res
 
-# Time: O(mlogm + mn)
+# Time: O(mlogm + mlogn)
 # Space: O(m + n)
-                
-                
-
-
