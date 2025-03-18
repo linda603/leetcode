@@ -1,7 +1,5 @@
 class Solution:
     def minRemoveToMakeValid(self, s: str) -> str:
-        if not s:
-            return s
         arr = list(s)
         stack = []
 
@@ -11,7 +9,7 @@ class Solution:
             elif c == ")":
                 if stack:
                     stack.pop()
-                else:
+                else: # invalid )
                     arr[i] = ""
         
         while stack:
@@ -19,4 +17,4 @@ class Solution:
         return "".join(arr)
 
 # Time: O(n)
-# Space: O(n) due to arr + stack
+# Space: O(n)
