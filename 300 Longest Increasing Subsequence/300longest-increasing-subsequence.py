@@ -1,25 +1,25 @@
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
-        seq = []
+        sequence = []
 
-        for i in range(len(nums)):
-            if not seq or seq[-1] < nums[i]:
-                seq.append(nums[i])
+        for num in nums:
+            if not sequence or sequence[-1] < num:
+                sequence.append(num)
             else:
-                replace_i = self.upper_bound(seq, nums[i])
-                seq[replace_i] = nums[i]
-        return len(seq)
-    
-    def upper_bound(self, seq, val):
+                replace_idx = self.binary_search(sequence, num)
+                sequence[replace_idx] = num
+        return len(sequence)
+
+    def binary_search(self, sequence, target):
         l = 0
-        r = len(seq) - 1
+        r = len(sequence) - 1
         res = r
 
         while l <= r:
             mid = (l + r) // 2
-            if seq[mid] == val:
+            if sequence[mid] == target:
                 return mid
-            elif seq[mid] > val:
+            if sequence[mid] > target:
                 res = mid
                 r = mid - 1
             else:
