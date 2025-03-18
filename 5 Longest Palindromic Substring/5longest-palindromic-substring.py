@@ -1,30 +1,27 @@
 class Solution:
     def longestPalindrome(self, s: str) -> str:
-        res = [-1, -1]
-        max_len = 0
+        res = ""
+        max_length = 0
 
         for i in range(len(s)):
-            odd_len = self.get_longest_pal(s, i, i)
-            even_len = self.get_longest_pal(s, i, i + 1)
-            if odd_len > max_len:
-                max_len = odd_len
-                dist = max_len // 2
-                res = [i - dist, i + dist]
-            if even_len > max_len:
-                max_len = even_len
-                dist = max_len // 2 - 1
-                res = [i - dist, i + dist + 1]
-        l, r = res
-        return s[l: r + 1]
-    
-    def get_longest_pal(self, s, l, r):
+            odd = self.get_longest_pal(s, i, i)
+            even = self.get_longest_pal(s, i, i + 1) if i + 1 < len(s) else ""
+            if len(odd) > max_length:
+                max_length = len(odd)
+                res = odd
+            if len(even) > max_length:
+                max_length = len(even)
+                res = even
+        return res
+
+    def get_longest_pal(self, s, left, right):
         
-        while l >= 0 and r < len(s):
-            if s[l] != s[r]:
+        while left >= 0 and right < len(s):
+            if s[left] != s[right]:
                 break
-            l -= 1
-            r += 1
-        return r - l - 1
+            left -= 1
+            right += 1
+        return s[left + 1 : right]
 
 # Time: O(n^2)
-# Space: O(1)
+# Space: O(n)
