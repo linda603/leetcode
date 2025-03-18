@@ -6,22 +6,20 @@
 #         self.right = right
 class Solution:
     def isCompleteTree(self, root: Optional[TreeNode]) -> bool:
-        
         queue = deque()
         if root:
-            queue.append(root) # N, 7, N, N, N, N
-
+            queue.append(root)
+        
         while queue:
             node = queue.popleft()
             if not node:
-                for i in range(len(queue)):
+                while queue:
                     if queue.popleft():
                         return False
                 break
             queue.append(node.left)
             queue.append(node.right)
-    
         return True
-    
-# T: O(n)
-# S: O(n)
+
+# Time: O(n)
+# Space: O(n)
